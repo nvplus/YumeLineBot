@@ -11,32 +11,35 @@ const { token, clientId, guildId } = config;
 const rest = new REST().setToken(token);
 const commands = [];
 
-const foldersPath = path.join(__dirname, 'src/commands');
-const commandFolders = fs.readdirSync(foldersPath);
+let count = 0;
+const commandsFolder = path.join(__dirname, 'src/commands');
+const commandFolders = readdirSync(commandsFolder);
 
 (async () => {
-    for (const folder of commandFolders) {
-        const commandsPath = path.join(foldersPath, folder);
-        const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-      
-        for (const file of commandFiles) {
-          const filePath = path.join(commandsPath, file);
-          const fileURL = toFileURL(filePath);
-          const command = await import(fileURL)
-          commands.push(command.data.toJSON());
-        }
-      }
-      
+	for (const folderName of commandFolders) {
+		const currFolderPath = path.join(commandsFolder, folderName);
+		const commandFiles = readdirSync(currFolderPath).filter(file => file.endsWith('.js'));
+		commands[folderName] = [];
+		for (const file of commandFiles) {
+			const filePath = path.join(currFolderPath, file);
+			const fileURL = toFileURL(filePath);
+			const command = await import(fileURL)
+			commands[folderName].push(command.data.toJSON());
+			count += 1;
+		}
+	}      
 	try {
-		console.log(`Started refreshing ${commands.length} application (/) commands.`);
-
-		// The put method is used to fully refresh all commands in the guild with the current set
-		const data = await rest.put(
+		console.log(`Started refreshing ${count} application commands.`);
+		const data_guild = await rest.put(
 			Routes.applicationGuildCommands(clientId, guildId),
-			{ body: commands },
+			{ body: commands['guild'] },
 		);
+		const data_global = await rest.put(
+			Routes.applicationCommands(clientId),
+			{ body: commands['global'] },
+		);
+		console.log(`Successfully reloaded ${count} application commands. (Global: ${data_global.length} guild: ${data_guild.length})`);
 
-		console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 	} catch (error) {
 		// And of course, make sure you catch and log any errors!
 		console.error(error);
