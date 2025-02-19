@@ -46,4 +46,4 @@ const YumeLineBot = () => {
     return client;
 }
 
-export default YumeLineBot;
+export default YumeLineBot();
