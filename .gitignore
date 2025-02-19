@@ -1,3 +1,4 @@
 node_modules
 config.json
 src/db/database.db
+src/db/database.db-journal

@@ -1,9 +1,21 @@
 import express from 'express';
 import { getUserById } from '../../db/db.js';
+import config from '../../../config.json' assert { type: 'json' };
+const { apiKeys } = config;
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
+    let apiKey;
+
+    if (req.headers.authorization) {
+        apiKey = req.headers.authorization.replace('Bearer ', '');
+    }
+    
+    if (!apiKey || !apiKeys.includes(apiKey)) {
+        return res.status(401).json({error: 'Nice try Diddy'});
+    }
+
     const client = req.client;
     const { game_name, user_ids } = req.body;
     let count = 0;

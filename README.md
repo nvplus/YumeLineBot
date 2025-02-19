@@ -14,7 +14,7 @@
 4. Users can opt-out of the feature using `/opt-out` in the DM channel with the bot
 
 ## API Documentation
-`POST http://xxx.xxx.xx.xxx:3000/webhook`
+`POST /webhook`
 
 Sends a message to a list of users for a specific game. Messages will only be sent if they are opted into line alerts.
 ```json

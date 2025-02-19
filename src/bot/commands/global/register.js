@@ -39,6 +39,7 @@ export const execute = async (interaction) => {
             const user = await interaction.user.createDM();
             await user.send(`You will now receive a message when you are up next on a game at Yume.\n\nIf you'd like to opt-out, type \`/opt-out\`.`)
             await interaction.reply({ content: 'Successfully registered for line alerts!',  flags: MessageFlags.Ephemeral });
+            console.log(`Registered new user ${interaction.user.displayName} (${interaction.user.id}) with card ID ${user_id}`);
         } else {
             await interaction.reply({ content: 'Please enter your card ID.',  flags: MessageFlags.Ephemeral });
         }

@@ -6,7 +6,13 @@ const events = {
             return;
         }
         const command = interaction.client.commands.get(interaction.commandName);
-        await command.execute(interaction);
+        try {
+            await command.execute(interaction);
+        }
+        catch (err) {
+            console.log(err);
+        }
+        
     }
 }
 
