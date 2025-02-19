@@ -1,5 +1,6 @@
 {
     "token": "",
     "clientId": "",
-    "guildId": ""
+    "guildId": "",
+    "apiPort": 3000
 }
