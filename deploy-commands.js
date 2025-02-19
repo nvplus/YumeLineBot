@@ -30,10 +30,13 @@ const commandFolders = readdirSync(commandsFolder);
 	}      
 	try {
 		console.log(`Started refreshing ${count} application commands.`);
-		const data_guild = await rest.put(
-			Routes.applicationGuildCommands(clientId, guildId),
-			{ body: commands['guild'] },
-		);
+		let data_guild = [];
+		if (guildId !== undefined) {
+			data_guild = await rest.put(
+				Routes.applicationGuildCommands(clientId, guildId),
+				{ body: commands['guild'] },
+			);
+		}
 		const data_global = await rest.put(
 			Routes.applicationCommands(clientId),
 			{ body: commands['global'] },
