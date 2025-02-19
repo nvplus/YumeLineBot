@@ -14,12 +14,22 @@
 4. Users can opt-out of the feature using `/opt-out` in the DM channel with the bot
 
 ## API Documentation
-### Example
 `POST http://xxx.xxx.xx.xxx:3000/webhook`
-Payload:
+
+Sends a message to a list of users for a specific game. Messages will only be sent if they are opted into line alerts.
 ```json
 {
     "game_name": "maimai DX", // Name of the game
     "user_ids": ["011X99X1X1XX110X"] // Array of Yume card numbers
 }
 ```
+## Commands
+`/register <user_id>` - Registers the user for line alerts. Opts in users to line alerts by default.
+`/update_id` - Allows the user to update their card ID, in the event of them losing it or typing it incorrectly
+`/opt-out` - Opts the user out of line alerts. This will set `notifications_enabled` to `false`.
+`/opt-in` - Opts the user back into line alerts. This will set `notifications_enabled` to `true`.
+
+## FAQ
+### How to retrieve card ID?
+- Users can retrieve their card ID by using NFC Tools. The card ID will be the serial number displayed in the app after reading their card.
+- Download: [iOS](https://apps.apple.com/us/app/nfc-tools/id1252962749) | [Android](https://play.google.com/store/apps/details?id=com.wakdev.wdnfc)

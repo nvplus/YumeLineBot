@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, MessageFlags } from 'discord.js';
-import { updateUserId } from '../../../db/db.js';
+import { updateUserId, getUserById } from '../../../db/db.js';
 
 export const data = new SlashCommandBuilder()
 .setName('update_id')
@@ -12,14 +12,25 @@ export const data = new SlashCommandBuilder()
 
 export const execute = async (interaction) => {
     const user = await interaction.user.createDM();
-    const userId = await interaction.options.getString('user_id');
-    
+    let user_id = await interaction.options.getString('user_id');
+    user_id = user_id.replaceAll(':', '');
     try {
-        await updateUserId(userId, interaction.user.id); 
-        await user.send(`You have updated your card ID to \`${userId}\``);
+        if (user_id.length > 0) {
+            const existing_user = await getUserById(user_id);
+
+            if (existing_user) {
+                await interaction.reply({
+                    content: `User already exists with card ID \`${user_id}\`. Please try a different card.`, 
+                    flags: MessageFlags.Ephemeral
+                });
+                return;
+            }
+            await updateUserId(user_id, interaction.user.id); 
+            await user.send(`You have updated your card ID to \`${user_id}\``);
+        }
     }
     catch (err) {
-        console.log(`Error updating the ID of user with Discord ID ${interaction.user.id}`, err);
+        console.error(`Error updating the ID of user with Discord ID ${interaction.user.id}`, err);
         await interaction.reply({ content: 'Error updating ID. Please try again.',  flags: MessageFlags.Ephemeral });
     }
 };

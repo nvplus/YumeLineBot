@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, MessageFlags } from 'discord.js';
-import { registerUser, getUserbyDiscordId } from '../../../db/db.js';
+import { registerUser, getUserById, getUserbyDiscordId } from '../../../db/db.js';
 
 export const data = new SlashCommandBuilder()
 .setName('register')
@@ -11,19 +11,40 @@ export const data = new SlashCommandBuilder()
 );
 
 export const execute = async (interaction) => {
-    const existing_user = await getUserbyDiscordId(interaction.user.id);
-    if (existing_user) {
-        await interaction.reply({ content: `You're already registered for line alerts.`,  flags: MessageFlags.Ephemeral });
-        return;
-    }
     try {
-        const user_id = await interaction.options.getString('user_id');
-        await registerUser(user_id, interaction.user.id); 
-        const user = await interaction.user.createDM();
-        await user.send(`You will now receive a message when you are up next on a game at Yume.\n\nIf you'd like to opt-out, type \`/opt-out\`.`)
-        await interaction.reply({ content: 'Successfully registered for line alerts!',  flags: MessageFlags.Ephemeral });
+        let existingUser = await getUserbyDiscordId(interaction.user.id);
+        if (existingUser) {
+            await interaction.reply({
+                content: `You're already registered for line alerts. If you've opted out and are trying to opt back in, type \`/opt-in\`.`,
+                flags: MessageFlags.Ephemeral
+            });
+            return;
+        }
+
+        let user_id = await interaction.options.getString('user_id');
+        user_id = user_id.replaceAll(':', '');
+    
+        if (user_id.length > 0) {
+            existingUser = await getUserById(user_id);
+
+            if (existingUser) {
+                await interaction.reply({
+                    content: `User already exists with card ID \`${user_id}\`. Please try a different card.`,
+                    flags: MessageFlags.Ephemeral
+                });
+                return;
+            }
+            
+            await registerUser(user_id, interaction.user.id); 
+            const user = await interaction.user.createDM();
+            await user.send(`You will now receive a message when you are up next on a game at Yume.\n\nIf you'd like to opt-out, type \`/opt-out\`.`)
+            await interaction.reply({ content: 'Successfully registered for line alerts!',  flags: MessageFlags.Ephemeral });
+        } else {
+            await interaction.reply({ content: 'Please enter your card ID.',  flags: MessageFlags.Ephemeral });
+        }
+
     } catch (err) {
-        console.log(err);
+        console.error(err);
         await interaction.reply({ content: 'Error registering. Please try again.',  flags: MessageFlags.Ephemeral });
     }
 };

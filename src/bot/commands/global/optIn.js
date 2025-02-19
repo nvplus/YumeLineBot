@@ -10,7 +10,7 @@ export const execute = async (interaction) => {
         await optInUser (interaction.user.id); 
         await interaction.reply({ content: 'You have opted in to line alerts. To opt out, type `/opt-out`',  flags: MessageFlags.Ephemeral });
     } catch (err) {
-        console.log(`Error opting in user with Discord ID ${interaction.user.id}`, err);
+        console.error(`Error opting in user with Discord ID ${interaction.user.id}`, err);
         await interaction.reply({ content: 'Error opting in. Please try again.',  flags: MessageFlags.Ephemeral });
     }
 };
