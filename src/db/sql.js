@@ -10,7 +10,17 @@ const sql = {
                 resolve(rows);
             })
         });
-    }
+    },
+    run: (query) => {
+        return new Promise((resolve, reject) => {
+            db.run(query, (err) => {
+                if (err) {
+                    reject(err);
+                }
+                resolve();
+            })
+        });
+    },
 }
 
 export default sql;
