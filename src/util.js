@@ -12,8 +12,9 @@ const getISOStringNow = () => {
 }
 
 export const log = {
-  debug: (param) =>  console.log(`[DEBUG] [${getISOStringNow()}]`, param),
+  debug: (msg) =>  console.log(`[DEBUG] [${getISOStringNow()}]`, msg),
   error: (err) => console.error(`[ERROR] [${getISOStringNow()}]`, err),
+  warn: (msg) =>  console.log(`[WARNING] [${getISOStringNow()}]`, msg),
 }
 
 export const isValidCard = (cardId) => {

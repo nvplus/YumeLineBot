@@ -1,23 +1,10 @@
 import express from 'express';
 import { getUsersByCardId } from '../../db/db.js';
-import config from '../../../config.json' assert { type: 'json' };
 import { log } from '../../util.js';
-
-const { apiKeys } = config;
 
 const router = express.Router();
 
 router.post('/', async (req, res) => {
-    let apiKey;
-
-    if (req.headers.authorization) {
-        apiKey = req.headers.authorization.replace('Bearer ', '');
-    }
-    
-    if (!apiKey || !apiKeys.includes(apiKey)) {
-        return res.status(401).json({error: 'Nice try Diddy'});
-    }
-
     const client = req.client;
     const { game_name, card_ids } = req.body;
     let count = 0;
