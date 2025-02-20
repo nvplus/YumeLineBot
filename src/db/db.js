@@ -15,7 +15,8 @@ export const getCardsByDiscordId = (discordId) => {
     return sql.all(`
         SELECT card.* FROM card
         LEFT JOIN user ON user.id = card.user_id
-        WHERE card.discord_id = ?
+        WHERE user.discord_id = ?
+        ORDER BY created ASC
     `, [discordId]);
 }
 
