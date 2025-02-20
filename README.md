@@ -4,7 +4,7 @@
 1. Copy `config-sample.json` and rename it to `config.json`
 2. Populate configuration values
 3. `npm run deploy-commands` To deploy the slash commands
-4. `npm run build-db` To build the database schema
+4. `npm run build-db` To build the database
 5. `npm start` To start the webhook server and Discord bot instance
 
 ## User flow
@@ -20,13 +20,14 @@ Sends a message to a list of users for a specific game. Messages will only be se
 ```json
 {
     "game_name": "maimai DX", // Name of the game
-    "user_ids": ["011X99X1X1XX110X"] // Array of Yume card numbers
+    "card_ids": ["011X99X1X1XX110X"] // Array of Yume card numbers
 }
 ```
 ## Commands
-`/register <user_id>` - Registers the user for line alerts. Opts in users to line alerts by default.
-`/update_id` - Allows the user to update their card ID, in the event of them losing it or typing it incorrectly
+`/register <card_id>` - Registers the user for line alerts. Opts in users to line alerts by default.
+
 `/opt-out` - Opts the user out of line alerts. This will set `notifications_enabled` to `false`.
+
 `/opt-in` - Opts the user back into line alerts. This will set `notifications_enabled` to `true`.
 
 ## FAQ
