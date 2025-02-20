@@ -5,6 +5,7 @@ import path from 'node:path';
 import { dirname } from 'path';
 import { toFileURL} from '../util.js';
 import events from './events.js';
+import { log } from '../util.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -40,7 +41,7 @@ const YumeLineBot = () => {
     }
 
     client.once(Events.ClientReady, readyClient => {
-        console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+        log.debug(`Ready! Logged in as ${readyClient.user.tag}`);
     });
     
     return client;

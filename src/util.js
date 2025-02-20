@@ -5,3 +5,13 @@ export const toFileURL = (filePath) => {
   }
   return `file://${filePath}`;
 };
+
+const getISOStringNow = () => {
+  const dt = new Date();
+  return dt.toISOString();
+}
+
+export const log = {
+  debug: (param) =>  console.log(`[DEBUG] [${getISOStringNow()}]`, param),
+  error: (err) => console.error(`[ERROR] [${getISOStringNow()}]`, err),
+}

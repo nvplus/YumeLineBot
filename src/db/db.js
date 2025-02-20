@@ -1,11 +1,12 @@
 import sqlite3 from 'sqlite3';
 import path from 'path';
 import sql from './sql.js';
+import { log } from '../util.js';
 
 const dbPath = path.resolve('./db/database.db');
 const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
     if (err) {
-        console.error('Error opening database:', err);
+        log.error('Error opening database:', err);
         return;
     }
 });

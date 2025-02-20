@@ -1,4 +1,5 @@
 import { Events } from 'discord.js';
+import { log } from '../util.js';
 
 const events = {
     [Events.InteractionCreate]: async interaction => {
@@ -10,7 +11,7 @@ const events = {
             await command.execute(interaction);
         }
         catch (err) {
-            console.log(err);
+            log.error(err);
         }
         
     }

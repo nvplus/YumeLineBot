@@ -1,6 +1,8 @@
 import express from 'express';
 import { getUsersByCardId } from '../../db/db.js';
 import config from '../../../config.json' assert { type: 'json' };
+import { log } from '../../util.js';
+
 const { apiKeys } = config;
 
 const router = express.Router();
@@ -39,7 +41,7 @@ router.post('/', async (req, res) => {
         res.status(200).send(`Successfully sent ${count} notifications`);
     }
     catch (err) {
-        console.error(err);
+        log.error(err);
         res.status(500).send(`Error sending messages`);
     }
 });

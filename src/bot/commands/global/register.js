@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, MessageFlags } from 'discord.js';
 import { registerUser, getUserbyDiscordId, getCard } from '../../../db/db.js';
+import { log } from '../../../util.js';
 
 export const data = new SlashCommandBuilder()
 .setName('register')
@@ -43,13 +44,13 @@ export const execute = async (interaction) => {
             const user = await interaction.user.createDM();
             await user.send(`You will now receive a message when you are up next on a game at Yume.\n\nIf you'd like to opt-out, type \`/opt-out\`.`)
 
-            console.log(`Registered new user ${interaction.user.displayName} (${interaction.user.id}) with card ID ${card_id}`);
+            log.debug(`Registered new user ${interaction.user.displayName} (${interaction.user.id}) with card ID ${card_id}`);
         } else {
             await interaction.reply({ content: 'Please enter your card ID.',  flags: MessageFlags.Ephemeral });
         }
 
     } catch (err) {
-        console.error(err);
+        log.error(err);
         await interaction.reply({ content: 'Error registering. Please try again.',  flags: MessageFlags.Ephemeral });
     }
 };

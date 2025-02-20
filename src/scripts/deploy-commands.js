@@ -4,7 +4,7 @@ import fs, { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { toFileURL } from '../util.js';
+import { toFileURL, log } from '../util.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const { token, clientId, guildId } = config;
@@ -29,7 +29,7 @@ const commandFolders = readdirSync(commandsFolder);
 		}
 	}      
 	try {
-		console.log(`Started refreshing ${count} application commands.`);
+		log.debug(`Started refreshing ${count} application commands.`);
 		let data_guild = [];
 		if (guildId !== undefined) {
 			data_guild = await rest.put(
@@ -41,10 +41,10 @@ const commandFolders = readdirSync(commandsFolder);
 			Routes.applicationCommands(clientId),
 			{ body: commands['global'] },
 		);
-		console.log(`Successfully reloaded ${count} application commands. (Global: ${data_global.length} guild: ${data_guild.length})`);
+		log.debug(`Successfully reloaded ${count} application commands. (Global: ${data_global.length} guild: ${data_guild.length})`);
 
 	} catch (error) {
 		// And of course, make sure you catch and log any errors!
-		console.error(error);
+		log.error(error);
 	}
 })();

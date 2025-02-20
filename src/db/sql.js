@@ -1,5 +1,6 @@
 import db from './db.js';
 import config from '../../config.json' assert { type: 'json' };
+import { log } from '../util.js';
 const { enableDbLogging } = config;
 
 const logQuery = (query, params = []) => {
@@ -7,7 +8,7 @@ const logQuery = (query, params = []) => {
         return;
     }
     const dt = new Date();
-    console.log(`[${dt.toISOString()}] Executed query:`, query, params);
+    log.debug(`[${dt.toISOString()}] Executed query:`, query, params);
 }
 
 const sql = {
