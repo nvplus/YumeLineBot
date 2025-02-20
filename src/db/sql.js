@@ -7,8 +7,7 @@ const logQuery = (query, params = []) => {
     if (!enableDbLogging) {
         return;
     }
-    const dt = new Date();
-    log.debug(`[${dt.toISOString()}] Executed query:`, query, params);
+    log.debug(`Executed query [ ${query} ] (${params.join(',')})`);
 }
 
 const sql = {

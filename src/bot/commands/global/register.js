@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, MessageFlags } from 'discord.js';
 import { registerUser, getUserbyDiscordId, getCard } from '../../../db/db.js';
-import { log } from '../../../util.js';
+import { log, isValidCard } from '../../../util.js';
 
 export const data = new SlashCommandBuilder()
 .setName('register')
@@ -24,7 +24,15 @@ export const execute = async (interaction) => {
         }
 
         let card_id = await interaction.options.getString('card_id');
-        card_id = card_id.replaceAll(':', '').replaceAll(' ', '');
+        card_id = card_id.replaceAll(':', '');
+
+        if (!isValidCard(card_id)) {
+            await interaction.reply({
+                content: `Invalid card ID. Please try again.`,
+                flags: MessageFlags.Ephemeral
+            });
+            return;
+        }
     
         if (card_id.length > 0) {
             // Check if card exists
