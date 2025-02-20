@@ -10,45 +10,54 @@ const db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CR
     }
 });
 
-export const getUserbyDiscordId = async (discordId) => {
-    const rows = await sql.all(`SELECT user_id, discord_id, notifications_enabled FROM user WHERE discord_id = "${discordId}"`);
-    if (rows.length > 0) {
-        return rows[0];
+export const getCardsByDiscordId = (discordId) => {
+    return sql.all(`
+        SELECT card.* FROM card
+        LEFT JOIN user ON user.id = card.user_id
+        WHERE card.discord_id = ?
+    `, [discordId]);
+}
+
+export const getCard = (cardId) => {
+    return sql.get(`SELECT * FROM card WHERE id = ?`, [cardId])[0];
+}
+
+export const getUserCardById = async (cardId) => {
+    const card = await getCard(cardId);
+    if (card) {
+        return sql.all(`
+            SELECT user.* FROM user
+            INNER JOIN card ON user.id = card.user_id
+            WHERE card.card_id = ?
+        `, [cardId]);
     }
 }
 
-export const getUserById = async (userId) => { 
-    const rows = await sql.all(`SELECT user_id, discord_id, notifications_enabled FROM user WHERE user_id = "${userId}"`);
-    if (rows.length > 0) {
-        return rows[0];
-    }
+export const getUserbyDiscordId = (discordId) => {
+    return sql.get(`SELECT id, discord_id, notifications_enabled FROM user WHERE discord_id = ?`, [discordId]);
 }
 
-export const registerUser = async (userId, discordId) => {
-    const user = await getUserById(userId);
-    if (!user) {
-        await sql.run(`INSERT INTO user(user_id, discord_id, notifications_enabled) VALUES ("${userId}", "${discordId}", true);`);
+export const registerUser = async (cardId, discordId) => {
+    const user = await getUserbyDiscordId(discordId);
+    const card = await getCard(cardId);
+    if (!user && !card) {
+        await sql.run(`INSERT INTO user(discord_id, notifications_enabled) VALUES (?, ?)`, [discordId, true]);
+        const newUser = await getUserbyDiscordId(discordId);
+        await sql.run(`INSERT INTO card (user_id, card_id) VALUES (?, ?)`, [newUser.id, cardId]);
     }
 }
 
 export const optOutUser = async (discordId) => {
     const user = await getUserbyDiscordId(discordId);
     if (user && user.notifications_enabled) {
-        await sql.run(`UPDATE user SET notifications_enabled = false WHERE discord_id = "${discordId}"`);
+        await sql.run(`UPDATE user SET notifications_enabled = false WHERE discord_id = ?`, [discordId]);
     }
 }
 
 export const optInUser = async (discordId) => {
     const user = await getUserbyDiscordId(discordId);
     if (user && !user.notifications_enabled) {
-        await sql.run(`UPDATE user SET notifications_enabled = true WHERE discord_id = "${discordId}"`);
-    }
-}
-
-export const updateUserId = async (newUserId, discordId) => {
-    const user = await getUserbyDiscordId(discordId);
-    if (user) {
-        await sql.run(`UPDATE user SET user_id = "${newUserId}" WHERE discord_id = "${discordId}";`);
+        await sql.run(`UPDATE user SET notifications_enabled = true WHERE discord_id = ?`, [discordId]);
     }
 }
 

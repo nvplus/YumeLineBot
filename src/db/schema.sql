@@ -1,11 +1,9 @@
 CREATE TABLE IF NOT EXISTS user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
     discord_id TEXT NOT NULL,
     notifications_enabled BOOLEAN DEFAULT false,
     created DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated DATETIME DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(user_id, discord_id)
+    updated DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TRIGGER IF NOT EXISTS update_user_timestamp
@@ -14,6 +12,25 @@ FOR EACH ROW
 WHEN OLD.updated != NEW.updated
 BEGIN
     UPDATE user
+    SET updated = CURRENT_TIMESTAMP
+    WHERE id = OLD.id;
+END;
+
+CREATE TABLE IF NOT EXISTS card (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    card_id TEXT NOT NULL UNIQUE,
+    created DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+);
+
+CREATE TRIGGER IF NOT EXISTS update_card_timestamp
+AFTER UPDATE ON card
+FOR EACH ROW
+WHEN OLD.updated != NEW.updated
+BEGIN
+    UPDATE card
     SET updated = CURRENT_TIMESTAMP
     WHERE id = OLD.id;
 END;

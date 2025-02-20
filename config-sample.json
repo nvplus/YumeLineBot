@@ -4,5 +4,6 @@
     "apiPort": 3000,
     "apiKeys": [
         ""
-    ]
+    ],
+    "enableDbLogging": false
 }

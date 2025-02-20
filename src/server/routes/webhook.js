@@ -1,5 +1,5 @@
 import express from 'express';
-import { getUserById } from '../../db/db.js';
+import { getUserCardById } from '../../db/db.js';
 import config from '../../../config.json' assert { type: 'json' };
 const { apiKeys } = config;
 
@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
     if (!game_name || !user_ids) {
         return res.status(400).json({ error: 'Please double check game name or user ids array.'})
     }
-
+    /*
     for (const user_id of user_ids) {
         try {
             const user = await getUserById(user_id);
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
         } catch (err) {
             console.error(`Error trying to send message to user ${user_id}`);
         }
-    }
+    }*/
 
     res.status(200).send(`Successfully sent ${count} notifications (${count}/${user_ids.length})`);
 });
