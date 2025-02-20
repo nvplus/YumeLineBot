@@ -33,6 +33,16 @@ export const getUserCardById = async (cardId) => {
     }
 }
 
+export const getUsersByCardId = (cardIds) => {
+    if (cardIds.length > 0) {
+        return sql.all(`
+            SELECT user.* FROM user
+            INNER JOIN card ON card.user_id = user.id
+            WHERE card_id in (?)
+        `, [cardIds.join(',')]);
+    }
+}
+
 export const getUserbyDiscordId = (discordId) => {
     return sql.get(`SELECT id, discord_id, notifications_enabled FROM user WHERE discord_id = ?`, [discordId]);
 }
