@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import fs, { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { dirname } from 'path';
-import { toFileURL} from './util.js';
+import { toFileURL} from '../util.js';
 import events from './events.js';
 
 const __filename = fileURLToPath(import.meta.url);

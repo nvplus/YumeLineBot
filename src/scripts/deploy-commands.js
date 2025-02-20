@@ -1,10 +1,10 @@
-import config from './config.json' assert { type: 'json' };
+import config from '../../config.json' assert { type: 'json' };
 import { REST, Routes } from 'discord.js';
 import fs, { readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { toFileURL } from './src/bot/util.js';
+import { toFileURL } from '../util.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const { token, clientId, guildId } = config;
@@ -12,7 +12,7 @@ const rest = new REST().setToken(token);
 const commands = [];
 
 let count = 0;
-const commandsFolder = path.join(__dirname, '/src/bot/commands');
+const commandsFolder = path.join(__dirname, '../bot/commands');
 const commandFolders = readdirSync(commandsFolder);
 
 (async () => {
