@@ -12,7 +12,6 @@ export const execute = async (interaction) => {
     try {
         const cards = await getCardsByDiscordId(discordId)
         if (cards.length > 0) {
-            const user = await interaction.user.createDM();
             let cardsString = '```';
             cards.forEach((card, index) => {
                 cardsString = cardsString.concat(`\n- ${index+1}${card.card_id} (Added ${new Date(card.created).toDateString()})`);
